@@ -1,0 +1,88 @@
+package Tie::Hash::Vivify;
+
+use 5.006001;
+use strict;
+use warnings;
+
+our $VERSION = 0.01;
+
+use Tie::Hash;
+use base 'Tie::ExtraHash';
+
+sub new {
+    my ($class, $defsub) = @_;
+    tie my %hash => $class, $defsub;
+    \%hash;
+}
+
+sub TIEHASH {
+    my ($class, $defsub) = @_;
+    bless [{}, $defsub] => ref $class || $class;
+}
+
+sub FETCH {
+    my ($self, $key) = @_;
+    my ($hash, $defsub) = @$self;
+    if (exists $hash->{$key}) {
+        $hash->{$key};
+    }
+    else {
+        $hash->{$key} = $defsub->();
+    }
+}
+
+1;
+
+
+=head1 NAME
+
+Tie::Hash::Vivify - Create hashes that autovivify in interesting ways.
+
+=head1 DESCRIPTION
+
+This module implements a hash where if you read a key that doesn't exist, it
+will call a code reference to fill that slot with a value.
+
+=head1 SYNOPSIS
+
+    use Tie::Hash::Vivify;
+
+    my $default = 0;
+    tie my %hash => 'Tie::Hash::Vivify', sub { "default" . $default++ };
+    print $hash{foo};   # default0
+    print $hash{bar};   # default1
+    print $hash{foo};   # default0
+    $hash{baz} = "hello";
+    print $hash{baz};   # hello
+
+    my $hashref = Tie::Hash::Vivify->new(sub { "default" });
+    $hashref->{foo};    # default
+    # ...
+
+=head1 OBJECT-ORIENTED INTERFACE
+
+You can also create your magic hash in an objecty way:
+
+=head2 new
+
+    my $hashref = Tie::Hash::Vivify->new(sub { "my default" });
+
+=head1 AUTHORS
+
+Luke Palmer, lrpalmer gmail com (original author)
+
+David Cantrell E<lt>david@cantrell.org.ukE<gt> (current maintainer)
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2005 by Luke Palmer
+
+Some parts Copyright 2010 David Cantrell E<lt>david@cantrell.org.ukE<gt>.
+
+This software is free-as-in-speech software, and may be used,
+distributed, and modified under the terms of either the GNU
+General Public Licence version 2 or the Artistic Licence.  It's
+up to you which one you use.  The full text of the licences can
+be found in the files GPL2.txt and ARTISTIC.txt, respectively.
+
+=cut

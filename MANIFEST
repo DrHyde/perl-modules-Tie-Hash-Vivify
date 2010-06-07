@@ -1,0 +1,10 @@
+lib/Tie/Hash/Vivify.pm
+Makefile.PL
+CHANGES
+README
+ARTISTIC.txt
+t/pod-coverage.t
+t/pod.t
+t/00-v0.01.t
+GPL2.txt
+MANIFEST
