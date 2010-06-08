@@ -4,20 +4,20 @@ use 5.006001;
 use strict;
 use warnings;
 
-our $VERSION = 0.01;
+our $VERSION = "1.00";
 
 use Tie::Hash;
-use base 'Tie::ExtraHash';
+use base 'Tie::ExtraHash'; # defined in Tie/Hash.pm
 
 sub new {
-    my ($class, $defsub) = @_;
-    tie my %hash => $class, $defsub;
+    my ($class, $defsub, %params) = @_;
+    tie my %hash => $class, $defsub, %params;
     \%hash;
 }
 
 sub TIEHASH {
-    my ($class, $defsub) = @_;
-    bless [{}, $defsub] => ref $class || $class;
+    my ($class, $defsub, %params) = @_;
+    bless [{}, $defsub, \%params] => ref $class || $class;
 }
 
 sub FETCH {
@@ -29,6 +29,22 @@ sub FETCH {
     else {
         $hash->{$key} = $defsub->();
     }
+}
+
+sub STORE {
+  my($self, $key, $value) = @_;
+  
+  if(
+    ref($value) eq 'HASH' &&
+    $self->[2]->{infect_children} &&
+    !(tied(%{$value}) && tied(%{$value})->isa(ref($self)))
+  ) {
+    $self->[0]->{$key} = ref($self)->new($self->[1], %{$self->[2]});
+    $self->[0]->{$key}->{$_} = $value->{$_} foreach(keys(%{$value}));
+    $self->[0]->{$key};
+  } else {
+    $self->[0]->{$key} = $value;
+  }
 }
 
 1;
@@ -66,6 +82,16 @@ You can also create your magic hash in an objecty way:
 =head2 new
 
     my $hashref = Tie::Hash::Vivify->new(sub { "my default" });
+
+=head1 "INFECTING" CHILD HASHES
+
+By default, hashes contained within your hash do *not* inherit magical
+vivification behaviour.  If you want them to, then pass some extra
+params thus:
+
+  tie my %hash => 'Tie::Hash::Vivify', sub { "default" . $default++ }, infect_children => 1;
+
+  my $hashref = Tie::Hash::Vivify->new(sub { "my default" }, infect_children => 1);
 
 =head1 AUTHORS
 

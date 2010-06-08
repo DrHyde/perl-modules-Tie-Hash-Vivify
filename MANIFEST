@@ -8,3 +8,4 @@ t/pod.t
 t/00-v0.01.t
 GPL2.txt
 MANIFEST
+t/01-infect-sub-hashes.t

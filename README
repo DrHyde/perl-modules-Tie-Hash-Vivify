@@ -14,6 +14,8 @@ COPYRIGHT AND LICENCE
 
 Copyright (C) 2005 by Luke Palmer, with some parts (C) 2010 David Cantrell
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.8.6 or,
-at your option, any later version of Perl 5 you may have available.
+This software is free-as-in-speech software, and may be used,
+distributed, and modified under the terms of either the GNU
+General Public Licence version 2 or the Artistic Licence.  It's
+up to you which one you use.  The full text of the licences can
+be found in the files GPL2.txt and ARTISTIC.txt, respectively.
