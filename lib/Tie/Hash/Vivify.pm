@@ -6,8 +6,8 @@ use warnings;
 
 our $VERSION = "1.00";
 
-use Tie::Hash;
-use base 'Tie::ExtraHash'; # defined in Tie/Hash.pm
+# use Tie::Hash;
+# use base 'Tie::ExtraHash'; # defined in Tie/Hash.pm
 
 sub new {
     my ($class, $defsub, %params) = @_;
@@ -46,6 +46,14 @@ sub STORE {
     $self->[0]->{$key} = $value;
   }
 }
+
+# copied from Tie::ExtraHash in perl-5.10.1/lib/Tie/Hash.pm
+sub FIRSTKEY { my $a = scalar keys %{$_[0][0]}; each %{$_[0][0]} }
+sub NEXTKEY  { each %{$_[0][0]} }
+sub EXISTS   { exists $_[0][0]->{$_[1]} }
+sub DELETE   { delete $_[0][0]->{$_[1]} }
+sub CLEAR    { %{$_[0][0]} = () }
+sub SCALAR   { scalar %{$_[0][0]} }
 
 1;
 

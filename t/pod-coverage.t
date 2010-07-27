@@ -6,5 +6,8 @@ eval "use Test::Pod::Coverage 1.00";
 if($@) {
     print "1..0 # SKIP Test::Pod::Coverage 1.00 required for testing POD coverage";
 } else {
-    all_pod_coverage_ok();
+    # Pod::Coverage doesn't know that SCALAR is special, at least in
+    # version 0.20. Remove this when that's fixed and declare the new
+    # P::C as a pre-req
+    all_pod_coverage_ok({also_private => ['SCALAR']});
 }
