@@ -6,9 +6,6 @@ use warnings;
 
 our $VERSION = "1.00";
 
-# use Tie::Hash;
-# use base 'Tie::ExtraHash'; # defined in Tie/Hash.pm
-
 sub new {
     my ($class, $defsub, %params) = @_;
     tie my %hash => $class, $defsub, %params;
