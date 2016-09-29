@@ -1,6 +1,6 @@
 lib/Tie/Hash/Vivify.pm
 Makefile.PL
-CHANGES
+CHANGELOG
 README
 ARTISTIC.txt
 t/pod-coverage.t
