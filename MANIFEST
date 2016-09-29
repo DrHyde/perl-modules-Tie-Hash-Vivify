@@ -10,3 +10,4 @@ GPL2.txt
 MANIFEST
 t/01-infect-sub-hashes.t
 MANIFEST.SKIP
+t/coverage.sh

@@ -14,7 +14,7 @@ sub new {
 
 sub TIEHASH {
     my ($class, $defsub, %params) = @_;
-    bless [{}, $defsub, \%params] => ref $class || $class;
+    bless [{}, $defsub, \%params], $class;
 }
 
 sub FETCH {
@@ -31,12 +31,18 @@ sub FETCH {
 sub STORE {
   my($self, $key, $value) = @_;
   
+  # print STDERR "ref(\$value):    ".ref($value)."\n";
+  # print STDERR "infect_children: ".($self->[2]->{infect_children} ? 1 : 0)."\n";
+  # if(ref($value) eq 'HASH') { print STDERR "tied:            ".!!tied(%{$value})."\n" }
+  # print STDERR "\n";
   if(
     ref($value) eq 'HASH' &&
     $self->[2]->{infect_children} &&
-    !(tied(%{$value}) && tied(%{$value})->isa(ref($self)))
+    !tied(%{$value})
+    # this would re-tie anything except a THV
+    # !(tied(%{$value}) && tied(%{$value})->isa(__PACKAGE__))
   ) {
-    $self->[0]->{$key} = ref($self)->new($self->[1], %{$self->[2]});
+    $self->[0]->{$key} = __PACKAGE__->new($self->[1], %{$self->[2]});
     $self->[0]->{$key}->{$_} = $value->{$_} foreach(keys(%{$value}));
     $self->[0]->{$key};
   } else {
@@ -97,6 +103,10 @@ params thus:
   tie my %hash => 'Tie::Hash::Vivify', sub { "default" . $default++ }, infect_children => 1;
 
   my $hashref = Tie::Hash::Vivify->new(sub { "my default" }, infect_children => 1);
+
+This will not, however, work if the child you insert is already tied - that
+would require re-tieing it, which would lose whatever magic behaviour the
+original had.
 
 =head1 AUTHORS
 
