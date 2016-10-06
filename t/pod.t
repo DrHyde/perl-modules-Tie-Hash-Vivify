@@ -1,4 +1,3 @@
-# $Id: pod.t,v 1.3 2007/11/01 17:00:19 drhyde Exp $
 use strict;
 $^W = 1;
 
