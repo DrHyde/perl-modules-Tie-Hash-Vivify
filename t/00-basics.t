@@ -23,7 +23,11 @@ my %notvivi = ();
 $notvivi{foo} = 'default0';
 $notvivi{bar} = "my data";
 $notvivi{baz} = "default1";
-is(scalar(%{$vivi}), scalar(%notvivi), "scalar() works, as if anyone's likely to ever bother");
+SKIP: {
+    skip "scalar() mysteriously broken on Ye Olde Perle", 1,
+        unless($] > 5.008001);
+    is(scalar(%{$vivi}), scalar(%notvivi), "scalar() works, as if anyone's likely to ever bother");
+}
 
 %{$vivi} = ();
 is_deeply([keys %{$vivi}], [], "can clear the hash");
