@@ -4,7 +4,7 @@ use 5.006001;
 use strict;
 use warnings;
 
-our $VERSION = "1.02";
+our $VERSION = "1.03";
 
 sub new {
     my ($class, $defsub, %params) = @_;
@@ -107,6 +107,12 @@ params thus:
 This will not, however, work if the child you insert is already tied - that
 would require re-tieing it, which would lose whatever magic behaviour the
 original had.
+
+=head1 BUGS
+
+C<scalar(%tied_hash)> appears to not work properly on perl 5.8.2 and
+earlier. I don't really care, and frankly nor should you. In the
+unlikely event that you do care, please submit a patch.
 
 =head1 AUTHORS
 
