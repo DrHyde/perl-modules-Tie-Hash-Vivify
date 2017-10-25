@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME              => 'Tie::Hash::Vivify',
     META_MERGE => {
-        license => 'other',
+        license => 'open_source',
         resources => {
 	    repository => 'https://github.com/DrHyde/perl-modules-Tie-Hash-Vivify',
 	    bugtracker => 'https://github.com/DrHyde/perl-modules-Tie-Hash-Vivify/issues'
